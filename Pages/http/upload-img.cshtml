@@ -1,0 +1,25 @@
+﻿@page
+@model YOS_CRUD.Pages.http.upload_imgModel
+@{
+    ViewData["Title"] = "Загрузка картинки в YOS";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Загрузка картинки в YOS</h1>
+</div>
+
+<form action="https://storage.yandexcloud.net/topfirm" method="post" enctype="multipart/form-data">
+    Ключ в хранилище:
+    <input  name="key" value="test/img/${filename}" /><br /> @* каталог для загрузки *@
+    @*<!--<input type="hidden" name="X-Amz-Credential" value="JK38EXAMPLEAKDID8/20190722/ru-central1/s3/aws4_request" />-->*@
+    <input type="hidden" name="acl" value="public-read" />
+    @*<!--<input type="hidden" name="X-Amz-Algorithm" value="AWS4-HMAC-SHA256" />-->
+    <!--<input type="hidden" name="X-Amz-Date" value="20190722T153936Z" />-->*@
+    <input type="hidden" name="success_action_redirect" value="https://localhost:7019/" /> @*возврат при успешном выполнении*@
+    <input type="hidden" name="Content-Type" value="image/jpeg" /><!--ОБЯЗАТЕЛЬНО-->
+    @*<!--<input type="hidden" name="policy" value="eyJjb25kaXRpb25zIj...M5OjM2WiJ9" />-->
+    <!--<input type="hidden" name="X-Amz-Signature" value="4bdfb2209fc30744458be10bc3b99361f2f50add20f2ca2425587a2722859f96" />-->*@
+    Файл для загрузки:
+    <input type="file" name="file" /> <br />
+    <input type="submit" name="submit" value="Загрузить" />
+</form>
