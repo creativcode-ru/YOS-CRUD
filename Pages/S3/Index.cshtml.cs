@@ -18,8 +18,8 @@ namespace YOS_CRUD.Pages.S3
     {
         
         //********* Статический ключ ****************
-        readonly string accessKey = "YCAJE8V2Xq2HSWNLgwoxS1Pgo";
-        readonly string secretKey = "YCMu9IMiVqt0N2x6xksun8SVnN4sbozMcjCM-XKz";
+        readonly string accessKey = "----------";
+        readonly string secretKey = "--------------------------";
         
         public string? Message { get; private set; }
         
@@ -83,19 +83,6 @@ namespace YOS_CRUD.Pages.S3
  Создание динамического веб-приложения, которое анализирует фотографии с помощью AWS SDK для .NET.
  https://github.com/awsdocs/aws-doc-sdk-examples/tree/main/dotnetv3/cross-service/PhotoAnalyzerApp
 
-Закрытый ключ не сохраняется в Yandex Cloud. Открытый ключ нельзя будет посмотреть в консоли управления.
 
-    ********* Статически ключ ****************
-     Идентификатор ключа: YCAJE8V2Xq2HSWNLgwoxS1Pgo
-     YCAJE8V2Xq2HSWNLgwoxS1Pgo
-     секретный ключ: YCMu9IMiVqt0N2x6xksun8SVnN4sbozMcjCM-XKz
-     YCMu9IMiVqt0N2x6xksun8SVnN4sbozMcjCM-XKz
-     Сохраните идентификатор и ключ. После закрытия диалога значение ключа будет недоступно.
-
-     ********* API-ключ ************* не срабатывает
-     Идентификатор ключа: ajec0sjvpkkc5rcdh24l
-     ajec0sjvpkkc5rcdh24l
-     секретный ключ: AQVNzAcn_NKMLtjYiJUuHblqPnHJL-qRQnb_qMNH
-     AQVNzAcn_NKMLtjYiJUuHblqPnHJL-qRQnb_qMNH
  */
 
