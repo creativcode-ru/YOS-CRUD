@@ -61,7 +61,7 @@ namespace YOS_CRUD.Pages.S3
 
             /* ***** Загрузка файла в бакет *****
             PutObjectRequest request = new PutObjectRequest();
-            request.BucketName = "topfirm";
+            request.BucketName = "topfirm"; //название бакета
             request.Key = "hello.txt"; //название файла
             request.ContentType = "text/plain";
             request.ContentBody = "test-10- кракозябли)"; //повторная запись обновит фай на том же url
@@ -83,6 +83,7 @@ namespace YOS_CRUD.Pages.S3
  Создание динамического веб-приложения, которое анализирует фотографии с помощью AWS SDK для .NET.
  https://github.com/awsdocs/aws-doc-sdk-examples/tree/main/dotnetv3/cross-service/PhotoAnalyzerApp
 
+Закрытый ключ не сохраняется в Yandex Cloud. Открытый ключ нельзя будет посмотреть в консоли управления.
 
     ********* Статически ключ ****************
      Идентификатор ключа: YCAJE8V2Xq2HSWNLgwoxS1Pgo

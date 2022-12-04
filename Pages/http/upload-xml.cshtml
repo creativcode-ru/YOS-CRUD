@@ -17,16 +17,13 @@
 
      Common MIME types https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
      XML as a top level MIME type https://alblue.bandlem.com/2005/08/rantxml-xml-as-top-level-mime-type.html
-
-Закрытый ключ не сохраняется в Yandex Cloud. Открытый ключ нельзя будет посмотреть в консоли управления.
      -->
 
 <form action="https://storage.yandexcloud.net/topfirm" method="post" enctype="multipart/form-data">
     Каталог в хранилище:
     <input  name="key" value="test/xml/${filename}" /><br />
-    <input type="hidden" name="acl" value="public-read" />
     <input type="hidden" name="success_action_redirect" value="https://localhost:7019/" />
-    <input type="hidden" name="Content-Type" value="application/xml" /><!--ОБЯЗАТЕЛЬНО-->
+    <input type="hidden" name="Content-Type" value="application/xml" /><!-- ОБЯЗАТЕЛЬНО-->
    <br />
     Файл для загрузки:
     <input type="file" name="file" /> <br />
