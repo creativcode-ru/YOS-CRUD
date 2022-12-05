@@ -17,12 +17,7 @@ namespace YOS_CRUD.Pages.S3
 
     public class IndexModel : PageModel
     {
-        ////********* Статический ключ ****************
-        //// !!! удалите ключи из текста при сохранении и GIT -- никаких открытых источников, храните только локально, в серетном месте.
-        //readonly string accessKey = "YCAJE8V2Xq2HSWNLgwoxS1Pgo"; //ваш идентификатор ключа 
-        //readonly string secretKey = "YCMu9IMiVqt0N2x6xksun8SVnN4sbozMcjCM-XKz"; //ваш секретный ключ
-        ////  =============================== ⚠удалить ключи из текста⚠ ==============================
-
+       
         public readonly string yandexS3 = "https://s3.yandexcloud.net";
         public readonly string myBucket = "topfirm"; //ваш бакет
 
@@ -31,8 +26,8 @@ namespace YOS_CRUD.Pages.S3
 
             //********* Статический ключ ****************
             // !!! удалите ключи из текста при сохранении и GIT -- никаких открытых источников, храните только локально, в серетном месте.
-            string accessKey = "YCAJE8V2Xq2HSWNLgwoxS1Pgo"; //ваш идентификатор ключа 
-            string secretKey = "YCMu9IMiVqt0N2x6xksun8SVnN4sbozMcjCM-XKz"; //ваш секретный ключ
+            string accessKey = "----------------"; //ваш идентификатор ключа 
+            string secretKey = "------------------------------------------"; //ваш секретный ключ
             //  =============================== ⚠удалить ключи из текста⚠ ==============================
            
             BasicAWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
@@ -95,9 +90,18 @@ namespace YOS_CRUD.Pages.S3
                 Message = "***** Загружено!<br />";
                 Message += $"<a href=\"{yandexS3}/{myBucket}/{myFile}\" target=\"_blank\">{myFile}</a>";
             }
-            if (myBody == "url") 
-            {
-            }
+            //if (myBody == "url") 
+            //{
+            //    GetPreSignedUrlRequest request = new GetPreSignedUrlRequest();
+            //    request.BucketName = myBucket;
+            //    request.Key = $"secret_{myFile}";
+            //    request.Expires = DateTime.Now.AddMinutes(10); //подпись действительна в течении 10 мин
+            //    request.Protocol = Protocol.HTTP;
+            //    string url = client.GetPreSignedURL(request);
+            //    Message = $"***** Подпись для загрузки файла <b>secret_{myFile}</b><br />";
+            //    Message += url;
+
+            //}
             else
             {
                 //*****Удаление файла*****

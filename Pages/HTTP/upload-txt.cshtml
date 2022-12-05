@@ -1,0 +1,24 @@
+﻿@page
+@model YOS_CRUD.Pages.http.upload_txtModel
+@{
+    ViewData["Title"] = "Загрузка файла XML в YOS";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Загрузка  файла XML в YOS</h1>
+</div>
+
+<!--
+ ...не сработало...
+     -->
+
+<form action="https://topfirm.s3.yandexcloud.net/secret_hello.txt?AWSAccessKeyId=YCAJE8V2Xq2HSWNLgwoxS1Pgo&Expires=1670240834&Signature=0BQOiW3tUno1nwR6O2KnQsrB%2BX8%3D" method="post" enctype="multipart/form-data">
+    Каталог в хранилище:
+    <input name="key" value="secret_${filename}" /><br />
+    <input type="hidden" name="success_action_redirect" value="https://localhost:7019/" />
+    <input type="hidden" name="Content-Type" value="text/plain" /><!-- ОБЯЗАТЕЛЬНО-->
+    <br />
+    Файл для загрузки:
+    <input type="file" name="file" value="hello.txt" /> <br />
+    <input type="submit" name="submit" value="Загрузить" />
+</form>
