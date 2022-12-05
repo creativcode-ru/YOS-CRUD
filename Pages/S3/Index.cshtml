@@ -7,3 +7,9 @@
 <p>
     @Html.Raw(Model.Message)
 </p>
+
+<p><b>Записать в файл @Model.myFile</b></p>
+<form method="post">
+    <input type="text" id="myBody" name="myBody" size="50" value="test:" />
+    <button>Выполнить</button>
+</form>

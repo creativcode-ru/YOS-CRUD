@@ -1,86 +1,126 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 using Amazon.S3;
 using Amazon.S3.Model;
 using Amazon.Runtime;
 
-//�������� � �������� ������ � �������� ��������� AWS S3 � ������� Asp.Net Core
+//Загрузка и удаление файлов в облачном хранилище AWS S3 с помощью Asp.Net Core
 //https://tutexchange.com/uploading-downloading-and-deleting-files-in-aws-s3-cloud-storage-using-asp-net-core/?amp=1
 /*
- ����������� Amazon S3 � .Net ���������� https://habr.com/ru/post/146223/
- 
+ Интегрируем Amazon S3 в .Net приложение https://habr.com/ru/post/146223/
+
  */
 
 namespace YOS_CRUD.Pages.S3
 {
+
     public class IndexModel : PageModel
     {
-        
-        //********* ����������� ���� ****************
-        readonly string accessKey = "----------";
-        readonly string secretKey = "--------------------------";
-        
-        public string? Message { get; private set; }
-        
-        
-        public async Task<IActionResult> OnGet()
-        {
-            Message = "���������:<br /><br />";
-            //BasicAWSCredentials https://docs.aws.amazon.com/sdkfornet/v3/apidocs/items/Runtime/TBasicAWSCredentials.html
-            BasicAWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
+        ////********* Статический ключ ****************
+        //// !!! удалите ключи из текста при сохранении и GIT -- никаких открытых источников, храните только локально, в серетном месте.
+        //readonly string accessKey = "YCAJE8V2Xq2HSWNLgwoxS1Pgo"; //ваш идентификатор ключа 
+        //readonly string secretKey = "YCMu9IMiVqt0N2x6xksun8SVnN4sbozMcjCM-XKz"; //ваш секретный ключ
+        ////  =============================== ⚠удалить ключи из текста⚠ ==============================
 
+        public readonly string yandexS3 = "https://s3.yandexcloud.net";
+        public readonly string myBucket = "topfirm"; //ваш бакет
+
+        private AmazonS3Client YandexClient() {
+            //Примеры BasicAWSCredentials https://docs.aws.amazon.com/sdkfornet/v3/apidocs/items/Runtime/TBasicAWSCredentials.html
+
+            //********* Статический ключ ****************
+            // !!! удалите ключи из текста при сохранении и GIT -- никаких открытых источников, храните только локально, в серетном месте.
+            string accessKey = "YCAJE8V2Xq2HSWNLgwoxS1Pgo"; //ваш идентификатор ключа 
+            string secretKey = "YCMu9IMiVqt0N2x6xksun8SVnN4sbozMcjCM-XKz"; //ваш секретный ключ
+            //  =============================== ⚠удалить ключи из текста⚠ ==============================
+           
+            BasicAWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
             AmazonS3Config config = new AmazonS3Config
             {
                 //RegionEndpoint = Amazon.RegionEndpoint.APSouth1
-                ServiceURL = "https://s3.yandexcloud.net"
+                ServiceURL = yandexS3 
             };
+            return new AmazonS3Client(credentials, config);
+            
+        }
 
-            using AmazonS3Client client = new AmazonS3Client(credentials, config);
+        public string? Message { get; private set; }
 
-            Message += "***** ������ �������: <br/>";
+        public async Task<IActionResult> OnGet()
+        {
+            Message = "результат:<br /><br />";
+
+            using AmazonS3Client client = YandexClient();
+
+            Message += "***** Список бакетов: <br/>";
             ListBucketsResponse response = await client.ListBucketsAsync();
             foreach (S3Bucket b in response.Buckets)
             {
-                //Message += string.Format("{0}   {1}   {2}<br />", o.Key, o.Size, o.LastModified);
-                Message += $"{b.BucketName}   {b.CreationDate} <br />";
+                Message += $"{b.BucketName}, {b.CreationDate} <br />";
             }
             Message += "<br/>";
 
-
-            Message += "***** ������ �������� � ������ topfirm: <br/>";
-            ListObjectsRequest request = new ListObjectsRequest();
-            request.BucketName = "topfirm";
-            ListObjectsResponse response2 = await client.ListObjectsAsync(request);
+            //Message += "***** Список объектов в бакете topfirm: <br/>";
+            ListObjectsRequest requestGet = new ListObjectsRequest();
+            requestGet.BucketName = myBucket;
+            ListObjectsResponse response2 = await client.ListObjectsAsync(requestGet);
             foreach (S3Object o in response2.S3Objects)
             {
-                //Message += string.Format("{0}   {1}   {2}<br />", o.Key, o.Size, o.LastModified);
-                Message += $"{o.Key}   {o.Size}   {o.LastModified}<br />";
-
+                Message += $"<a href=\"{yandexS3}/{myBucket}/{o.Key}\" target=\"_blank\">{o.Key}</a>, {o.Size}, {o.LastModified}<br />";
             }
 
-            /* ***** �������� ����� � ����� *****
-            PutObjectRequest request = new PutObjectRequest();
-            request.BucketName = "topfirm"; //�������� ������
-            request.Key = "hello.txt"; //�������� �����
-            request.ContentType = "text/plain";
-            request.ContentBody = "test-10- ����������)"; //��������� ������ ������� ��� �� ��� �� url
-            await client.PutObjectAsync(request);
-            Message = Message + "***** ���������!";
-            */
+            return Page();
+        }
 
+        public readonly string myFile = "hello.txt"; //ваш файл для тестирования
+        [BindProperty]
+        public string? myBody { get; set; }
+        public async Task<IActionResult> OnPost()
+        {
+            Message = "для удаления введите del";
+            if (string.IsNullOrEmpty(myBody)) return Page();
+            
+            using AmazonS3Client client = YandexClient();
+
+            if (myBody != "del")
+            {
+                //*****Загрузка файла в бакет*****
+                PutObjectRequest request = new PutObjectRequest();
+                request.BucketName = myBucket;
+                request.Key = myFile;
+                request.ContentType = "text/plain"; //для текстового файла
+                request.ContentBody = myBody; //повторная запись обновит фай на том же url
+                await client.PutObjectAsync(request);
+                Message = "***** Загружено!<br />";
+                Message += $"<a href=\"{yandexS3}/{myBucket}/{myFile}\" target=\"_blank\">{myFile}</a>";
+            }
+            if (myBody == "url") 
+            {
+            }
+            else
+            {
+                //*****Удаление файла*****
+                DeleteObjectRequest request = new DeleteObjectRequest();
+                request.BucketName = myBucket;
+                request.Key = myFile;
+                await client.DeleteObjectAsync(request);
+                Message = "***** Файл удален! <br />";
+                Message += $"<a href=\"{yandexS3}/{myBucket}/{myFile}\" target=\"_blank\">{myFile}</a>";
+            }
+          
             return Page();
         }
     }
 }
 
-//���������� �� ���������� Razor  https://learn.microsoft.com/ru-ru/aspnet/core/mvc/views/razor?view=aspnetcore-7.0
-//����������� �������� Razor https://www.webtrainingroom.com/aspnetcore/call-async-property-in-razor-pagemodel
-
+//Справочник по синтаксису Razor  https://learn.microsoft.com/ru-ru/aspnet/core/mvc/views/razor?view=aspnetcore-7.0
+//Асинхронная страница Razor https://www.webtrainingroom.com/aspnetcore/call-async-property-in-razor-pagemodel
+//Изучение Razor Pages Методы обработчика в Razor Pages https://www.learnrazorpages.com/razor-pages/handler-methods
 
 /*
  C# S3 EXAMPLES https://docs.ceph.com/en/quincy/radosgw/s3/csharp/
- �������� ������������� ���-����������, ������� ����������� ���������� � ������� AWS SDK ��� .NET.
+ Создание динамического веб-приложения, которое анализирует фотографии с помощью AWS SDK для .NET.
  https://github.com/awsdocs/aws-doc-sdk-examples/tree/main/dotnetv3/cross-service/PhotoAnalyzerApp
 
 
