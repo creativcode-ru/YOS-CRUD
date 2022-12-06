@@ -1,0 +1,25 @@
+﻿@page
+@model YOS_CRUD.Pages.http.upload_htmlModel
+@{
+    ViewData["Title"] = "Загрузка файла XML в YOS";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Загрузка  файла XML в YOS</h1>
+</div>
+
+<!--
+     Common MIME types https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
+     XML as a top level MIME type https://alblue.bandlem.com/2005/08/rantxml-xml-as-top-level-mime-type.html
+     -->
+
+<form action="https://storage.yandexcloud.net/topfirm" method="post" enctype="multipart/form-data">
+    Загрузить html файл
+    <input  name="key" value="test/html/${filename}" /><br />
+    <input type="hidden" name="success_action_redirect" value="https://localhost:7019/" />
+    <input type="hidden" name="Content-Type" value="text/html" /><!-- ОБЯЗАТЕЛЬНО-->
+   <br />
+    Файл для загрузки:
+    <input type="file" name="file" /> <br />
+    <input type="submit" name="submit" value="Загрузить" />
+</form>
